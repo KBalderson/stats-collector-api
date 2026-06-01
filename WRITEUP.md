@@ -9,4 +9,6 @@ The current data model of one struct per metric is simple and works well for the
 
 ## Discuss runtime complexity.
 
-The runtime complexity of the current implementation is O(n) for both the uptime and average upload time calculations, where n is the number of heartbeats. This is because I chose to iterate through all the heartbeats to calculate the metrics. To optimize this, I could maintain running totals and counts as heartbeats are added, which would allow us to calculate the metrics in O(1) time when requested. However, this would add complexity to the code and might not be necessary unless there is a very high volume of heartbeats.
+The two POST endpoints are O(1) (a slice append), plus an O(D) check that the device ID exists, where D is the number of devices — trivial at this scale, and easily O(1) with a set/map.
+
+The GET endpoint is where the cost lives because the store keeps all heartbeats and stats in two flat slices and filters by device on read, a single device's stats query is O(H + S) over the total number of heartbeats and stats across the whole fleet. So a read for a quiet device still pays for every other device's data. For the challenge's volume this is fine, and I deliberately kept it simple. To scale it, the first step is keying storage by device (map[deviceID]...), which drops a read to O(that device's events); maintaining running aggregates (count, sum, min/max timestamp) as data arrives would make GET O(1) by adding some extra work to the POST handlers.
