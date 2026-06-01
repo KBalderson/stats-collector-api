@@ -24,7 +24,7 @@ To test against the SafelyYou device simulator, point it to the running docker c
 docker compose up --build device-simulator
 ```
 
-**Note:** The simulator writes its output to `results.txt` in its working directory, which is bind-mounted to `./results.txt` on the host so you can inspect the results. A blank `results.txt` is included in the repository because Docker requires the source of a single-file bind mount to already exist (otherwise it creates a *directory* by that name). As the simulator runs, it will populate this file, so it will show as changed in git.
+**Note:** The simulator writes its output to `results.txt` in its working directory, which is bind-mounted to `./results.txt` on the host so you can inspect the results. An initial `results.txt` is included in the repository because Docker requires the source of a single-file bind mount to already exist (otherwise it creates a *directory* by that name). As the simulator runs, it will populate this file, so it will show as changed in git.
 
 ## API Endpoints
 
