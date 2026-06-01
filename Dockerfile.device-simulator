@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+# TARGETARCH is provided by BuildKit (e.g. "amd64", "arm64") and matches the
+# emulator asset naming, so we can select the right binary automatically.
+ARG TARGETARCH
+ARG SIMULATOR_BASE_URL=https://sy-fleet-interview-assets.s3.us-east-2.amazonaws.com
+
+WORKDIR /app
+
+# ca-certificates + wget are needed to fetch the binary over https.
+RUN apk add --no-cache ca-certificates wget \
+    && wget -O device-simulator "${SIMULATOR_BASE_URL}/device-simulator-linux-${TARGETARCH}" \
+    && chmod +x device-simulator
+
+ENTRYPOINT ["./device-simulator"]

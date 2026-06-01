@@ -1,0 +1,19 @@
+services:
+  device-simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.device-simulator
+    volumes:
+      - ./results.txt:/app/results.txt
+    command:
+      - -host
+      - ${STATS_HOST:-stats-server}
+      - -port
+      - ${STATS_PORT:-80}
+
+  stats-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:80"
